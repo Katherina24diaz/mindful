@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mindful Insights</title>
+  <style>
+    /* General Styles */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      color: #003366;
+      overflow: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* Loading Screen */
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #003366;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .loading-bar-container {
+      width: 80%;
+      height: 30px;
+      background-color: #f0f8ff;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loading-bar {
+      height: 100%;
+      width: 0;
+      background-color: #1e90ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 15px;
+      animation: load 2s ease-in-out forwards;
+    }
+
+    @keyframes load {
+      0% {
+        width: 0;
+      }
+      100% {
+        width: 100%;
+      }
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      position: fixed;
+      left: -200px; /* Start off-screen */
+      top: 0;
+      width: 200px;
+      height: 100%;
+      background-color: #003366;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: left 1s ease;
+    }
+
+    .sidebar.show {
+      left: 0; /* Slide into view */
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: white;
+      margin: 15px 0;
+      font-size: 18px;
+      transition: background-color 0.3s, color 0.3s;
+      padding: 10px;
+      width: 100%;
+      text-align: center;
+      border-radius: 5px;
+    }
+
+    .sidebar a:hover {
+      background-color: #f0f8ff;
+      color: #003366;
+    }
+
+    /* Page Content */
+    .content {
+      margin-left: 220px;
+      padding: 20px;
+      display: none; /* Hidden until loading completes */
+    }
+
+    .content.show {
+      display: block;
+    }
+
+    .section {
+      border: 2px solid #003366;
+      padding: 20px;
+      margin: 40px 20px;
+      border-radius: 10px;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Paragraph Styles */
+    .paragraph-section {
+      margin-top: 20px;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-left: 20px; /* Add margin to the left */
+      margin-right: 20px; /* Add margin to the right */
+    }
+
+    /* Horizontal Line */
+    .horizontal-line {
+      border: 0;
+      border-top: 2px solid #003366;
+      margin: 20px 0;
+    }
+
+    /* Image Box */
+    .image-box-container {
+      display: flex;
+      margin: 20px 0;
+    }
+
+    .image-box {
+      width: 700px; /* Initial size */
+      height: 300px;
+      border: 2px solid #003366;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .image-box:hover {
+      transform: scale(1.1); /* Slightly bigger on hover */
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Center only one image box */
+.centered {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Specific Image Box Container */
+#specific-image-box {
+   display: flex;
+      margin: 20px 0;
+  justify-content: center;
+
+}
+
+/* Adjust images inside this box */
+#specific-image-box .image-box {
+  width: 1100px; /* Initial size */
+      height: 600px;
+      border: 2px solid #003366;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Stream Box - Specific Image Box */
+.stream-box {
+  display: flex;
+      margin: 20px 0;
+  justify-content: center;
+
+}
+
+/* Adjust images inside this box */
+.stream-box .image-box {
+  width: 600px; /* Initial size */
+      height: 1050px;
+      border: 2px solid #003366;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    /* Full-Screen Image for Home */
+    .full-screen-image {
+      width: 100%;
+      height: 100vh; /* Full viewport height */
+      object-fit: cover;
+    }
+
+.img-box {
+  width: 100%;      /* Make the container take up the full width of its parent */
+  height: 700px;    /* Adjust the height as needed */
+  overflow: hidden; /* Prevents the image from overflowing outside the container */
+  display: flex;    /* Use flexbox to center the image */
+  justify-content: center; /* Horizontally centers the image */
+  align-items: center; /* Vertically centers the image */
+}
+
+.img-box img {
+  width: 100%;      /* Make the image take up 100% of the container's width */
+  height: auto;     /* Maintain the aspect ratio of the image */
+  object-fit: cover; /* Ensure the image covers the entire container without distortion */
+}
+
+.image-box {
+  opacity: 0;
+  animation: fadeIn 5s forwards;
+  position: relative; /* Ensure proper positioning for overlap */
+  transition: transform 0.3s ease-in-out; /* Smooth hover effect */
+}
+
+.image-box:hover {
+  transform: scale(1.1); /* Enlarge the image on hover */
+  z-index: 10; /* Bring the image to the front */
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+
+.text-container {
+  position: relative; /* Ensures proper positioning of the text */
+  overflow: hidden; /* Hides the text until it slides in */
+}
+
+.slide-text {
+  position: relative;
+  left: -100%; /* Start from the left side, outside the container */
+  animation: slideFromLeft 2s forwards; /* Slide animation */
+}
+
+@keyframes slideFromLeft {
+  to {
+    left: 0; /* Move the text into its final position */
+
+  </style>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading">
+    <div class="loading-bar-container">
+      <div class="loading-bar">Mindful Insights</div>
+    </div>
+  </div>
+
+  <!-- Sidebar Navigation -->
+  <div class="sidebar" id="sidebar">
+    <a href="#" onclick="showSection('home')">Home</a>
+    <a href="#" onclick="showSection('quarter1')">Quarter 1</a>
+    <a href="#" onclick="showSection('quarter2')">Quarter 2</a>
+    <a href="#" onclick="showSection('quarter3')">Quarter 3</a>
+    <a href="#" onclick="showSection('quarter4')">Quarter 4</a>
+  </div>
+
+  <!-- Content -->
+  <div class="content" id="content">
+    <!-- Home Section -->
+    <section id="home" class="section">
+<div class="img-box">
+<img src="ins.gif" alt="Welcome Image" class="fade-in">
+</div>
+    </section>
+
+    <!-- Quarter 1 Section -->
+    <section id="quarter1" class="section " style="display: none;">
+      <h1 class="slide-text">Quarter 1:</h1>
+            <h2 class="slide-text" style="text-align: center;">Chosen Topic:</h2>
+
+<h2 class="slide-text" style="text-align: center; font-size: 36px;">
+  "The Positive Impact of Regular Exercise on Stress Management."
+</h2>
+
+<br>
+      <!-- Horizontal Line -->
+      <hr class="horizontal-line">
+      <h2 class="slide-text" style="text-align: center;">Audience Analysis for Stream: Google Form</h2>
+ <!-- Image Box -->
+      <div class="image-box-container">
+<img src="gender.png" alt="Insert Image Here" class="image-box">
+        <img src="age.png" alt="Insert Image Here" class="image-box">
+      </div>
+<!-- Image Box -->
+      <div class="image-box-container">
+        <img src="marital.png" alt="Insert Image Here" class="image-box">
+        <img src="educ.png" alt="Insert Image Here" class="image-box">
+      </div>
+  <!-- Image Box -->
+<div class="image-box-container">
+  <img src="content.png" alt="Insert Image Here" class="image-box centered">
+</div>
+
+
+    
+      <!-- Horizontal Line -->
+      <hr class="horizontal-line">
+
+      <!-- Title and Paragraph -->
+      <h2 class="slide-text" style="text-align: center;">Beliefs and Opinions on the Topic</h2>
+      <div class="paragraph-section">
+        <p class="slide-text">The results of our survey indicate that many people believe exercise is helpful in reducing stress. They view exercise as a natural stress reliever because it enhances the production of certain brain chemicals, such as endorphins, which act as natural painkillers and elevate mood. People's opinions on this are often based on personal experiences. The majority of respondents claim that regular exercise significantly improves their emotional and mental well-being. One example is Marciah, who shared, 'I do believe that exercise reduces stress because when I exercise, I feel less stressed. It's easier for me to fall asleep since I'm not anxious anymore.'</p>
+
+        <p class="slide-text">People frequently share personal stories of how exercise has helped them manage stress, anxiety, or depression. Numerous studies also support the positive effects of exercise on mental health. As Almirah stated, 'My opinion about this topic is that it is an important issue, especially in today's generation where many people are stressed.' and also ‘I am very positive that this topic will provide new information and raise awareness about how exercises helps in reducing stress.’ Research consistently shows that engaging in physical activity can improve overall psychological well-being, reduce symptoms of anxiety and depression, and boost mood.</p>
+      </div>
+
+<!-- Horizontal Line -->
+      <hr class="horizontal-line">
+
+<!-- Title and Paragraph -->
+      <h2 class="slide-text" style="text-align: center;">Attitudes on the Topic</h2>
+      <div class="paragraph-section">
+        <p class="slide-text" >Our survey asked the participants what their attitudes– more specifically, feelings and mindsets do they have about the topic “The Positive Effect of Regular Exercise on Stress Management”. To determine positive, negative, and neutral attitudes.</p>
+
+        <p class="slide-text">Based on the results, almost all of our respondents reacted positively to the research topic with a select few remaining neutral, while zero negative attitudes were recorded. These findings show that most participants agree regular exercise helps reduce stress, supporting the idea that physical activity is useful for relieving stress and improving emotional health. Below are the exact numbers<br><br><b>Positive - 34 (91.89%) &nbsp;&nbsp;&nbsp;&nbsp;
+Negative - 0 
+&nbsp;&nbsp;&nbsp;&nbsp;Neutral - 3 (8.11%)</b>
+</p>
+
+<!-- Horizontal Line -->
+      <hr class="horizontal-line">
+
+<!-- Title and Paragraph -->
+      <h2 class="slide-text" style="text-align: center;">Finding a Need for Viewers in a Streaming Category</h2>
+      <div class="paragraph-section">
+        <p class="slide-text"><b>We chose educational content; based on our audience analysis survey, the majority voted for it with 54.1%.</b></p>
+
+        <p class="slide-text">Our content focuses on educating adolescents to adults about the benefits of physical activity in stress management, explaining how exercise reduces stress hormones like cortisol and boosts endorphins for relaxation and well-being. It offers practical strategies for incorporating regular exercise into daily routines. The target audience, which includes individuals aged 12-24 and both single and in relationships, watches streams to relax, de-stress, or bond with others. Educational content, especially on YouTube, is ideal for this, providing scientific insights and active tips on stress relief through exercise, with the added benefit of community engagement and easy access to valuable information.
+</p>
+      </div>
+
+    </section>
+
+    <!-- Quarter 2 Section -->
+    <section id="quarter2" class="section" style="display: none;">
+      <h1 class="slide-text">Quarter 2:</h1>  
+      <h2 class="slide-text" style="text-align: center;">Finding a Need for Viewers in a Streaming Category</h2>
+      <div class="paragraph-section">
+
+        <p class="slide-text">This stream design neatly arranges visual and interactive components, making it perfect for educational content. While the chat box allows audience engagement for questions or conversations, the huge, central presentation screen guarantees attention on the educational content. Furthermore, having three cameras enables presenters to stream from various locations, guaranteeing smooth cooperation and interaction even when they are separated by great distances. This arrangement encourages interaction as well as efficient learning.
+</p>
+      </div><!-- Image Box -->
+<div class="image-box-container" id="specific-image-box">
+  <img src="run.gif" alt="Insert Image Here" class="image-box">
+</div>
+<!-- Image Box -->
+<div class="image-box-container" id="specific-image-box">
+  <img src="layout.jpg" alt="Insert Image Here" class="image-box">
+</div>
+<br>
+<!-- Horizontal Line -->
+      <hr class="horizontal-line">
+
+<h2 class="slide-text" style="text-align: center;">Streaming Outline</h2>
+
+<!-- Stream Box -->
+<div class="image-box-container stream-box">
+  <img src="flow.png" alt="Insert Image Here" class="image-box">
+</div>
+
+<hr class="horizontal-line">
+
+<h2 class="slide-text" style="text-align: center;">Promotional Poster & Plan</h2>
+
+ <div class="paragraph-section">
+
+        <p class="slide-text">We made a poster inviting people to join our stream. First, we included a clear call to action, making it easy for viewers to understand what to do next, which can help increase engagement. Additionally, we designed the poster to be visually engaging, using bright colors and bold fonts that grab attention and make it stand out in social media feeds. These elements are important because they draw people in and encourage them to take action. Studies show that effective posters use these techniques to increase visibility and response. We will post it on our individual social media accounts!
+</p>
+
+<!-- Stream Box -->
+<div class="image-box-container stream-box">
+<img src="poster.png" alt="Insert Image Here" class="image-box" style="width: 950px; height: 1350px;">
+</div>
+
+
+
+    </section>
+    <section id="quarter3" class="section" style="display: none;">
+      <h1 class="slide-text">Quarter 3</h1>
+      <p class="slide-text">Quarter 3 Coming Soon.</p>
+    </section>
+    <section id="quarter4" class="section" style="display: none;">
+      <h1 class="slide-text">Quarter 4</h1>
+      <p class="slide-text">Quarter 4 Coming Soon...</p>
+    </section>
+  </div>
+
+  <script>
+
+ // Function to scroll smoothly to the selected section
+    function scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      window.scrollTo({
+        top: section.offsetTop,
+        behavior: 'smooth'
+      });
+    }
+
+    // Detect when a section is in the viewport and fade it in
+    window.addEventListener('scroll', function() {
+      const sections = document.querySelectorAll('.section');
+      const windowHeight = window.innerHeight;
+
+      sections.forEach(section => {
+        const sectionTop = section.getBoundingClientRect().top;
+
+        if (sectionTop < windowHeight * 0.75) {
+          section.classList.add('visible');
+        }
+      });
+    });
+
+    // Add initial visible class to sections when the page is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => {
+        section.classList.add('visible');
+      });
+    });
+
+    // Show the loading screen and nav bar effect
+    window.onload = function () {
+      setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('sidebar').classList.add('show');
+        document.getElementById('content').classList.add('show');
+        document.body.style.overflow = 'auto';
+      }, 2000);
+    };
+
+    // Show the appropriate section
+    function showSection(sectionId) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => {
+        section.style.display = section.id === sectionId ? 'block' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
